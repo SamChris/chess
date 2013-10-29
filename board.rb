@@ -28,7 +28,6 @@ class Board
     false
   end
 
-
   def find_opposing_pieces(op_color)
     opp_pieces = []
     b_arr.each_with_index do |el1, i|
@@ -59,5 +58,36 @@ class Board
 
     return []
   end
+
+  def make_move
+    begin
+      puts "Enter coords of piece to move. (Ex. '1 3')"
+      start = gets.chomp.split(' ').map(&:to_i)
+      x, y = start
+      possible_moves = []
+      piece = b_arr[x][y]
+      possible_moves = piece.move
+      puts "Please select one of these positions"
+      p possible_moves
+      move_to = gets.chomp.split(' ').map(&:to_i)
+      if possible_moves.include?(move_to)
+        update_board(b_arr[x][y], move_to)
+        # move(start, move_to)
+      end
+    rescue NoMethodError
+      puts "There is no piece to move. Pick an actual piece."
+      retry
+    end
+  end
+
+  def update_board(piece, new_pos)
+    x, y = piece.pos
+    b_arr[x][y] = nil
+
+    piece.pos = new_pos
+    x, y = piece.pos
+    b_arr[x][y] = piece
+  end
+
 
 end
