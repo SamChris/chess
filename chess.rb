@@ -1,8 +1,11 @@
 class Piece
-  DIAG_DELTAS = [ [1,1],[-1,-1],[1,-1],[-1, 1]]
-  STRAIGHT_DELTAS = [ [0,1],[0,-1],[1,0],[1,-1]]
 
-  attr_accessor :pos
+  @board = Array.new(8) {Array.new(8)}
+
+  DIAG_DELTAS = [ [1,1],[-1,-1],[1,-1],[-1, 1]]
+  STRAIGHT_DELTAS = [ [0,1],[0,-1],[1,0],[-1,0]]
+
+  attr_accessor :pos, :board
 
 
   def initialize(board, pos)
@@ -12,17 +15,55 @@ class Piece
   end
 
 
-  def moves
-    places = []
+  def moves(places_to_move)
+    p places_to_move
   end
 
+
+
+
   def move
+    #can't implement this because the piece
+    #should use its own move method
   end
 
   def move_into_check?(pos)
   end
 
-  def get_diagonal_moves
+  def put_board(moves)
+    @board.each_with_index do |el1, i|
+      el1.each_with_index do |el2, j|
+        if moves.include?([i, j])
+          print "  "
+        else
+          print "X "
+        end
+      end
+      print "\n"
+    end
+  end
+
+end
+
+
+class SlidingPiece < Piece
+
+  def moves(sym)
+    if sym == :diagonal
+      diag_moves = get_diag_moves
+      put_board(diag_moves)
+    elsif sym == :straight
+      straight_moves = get_straight_moves
+      put_board(straight_moves)
+    else
+      all_moves = get_diag_moves
+      all_moves += get_straight_moves
+      put_board(all_moves)
+    end
+  end
+
+
+  def get_diag_moves
     diag_arr = []
     DIAG_DELTAS.each do |delta|
       diag_arr += get_moves(self.pos, delta)
@@ -31,6 +72,17 @@ class Piece
     diag_arr
   end
 
+  def get_straight_moves
+    str_arr = []
+    STRAIGHT_DELTAS.each do |delta|
+      str_arr += get_moves(self.pos, delta)
+    end
+
+    str_arr
+  end
+
+
+  # This method uses the delta to keep sliding in one direction
   def get_moves(pos, delta)
     x, y = delta
     move_arr = []
@@ -45,28 +97,6 @@ class Piece
     return []
   end
 
-end
-
-board = Array.new(8) {Array.new(8)}
- p = Piece.new(board, [3, 4])
-
-
-class SlidingPiece < Piece
-
-
-  def moves(dir)
-    if dir == :diagonal
-      diag_moves = super.get_diag_moves
-      return diag_moves
-    elsif dir == :straight
-      straight = super.get_straight_moves
-      return straight
-    else
-      all = super.get_diag_moves
-      all += super.get_straight_moves
-      return all
-    end
-  end
 
 end
 
@@ -96,14 +126,23 @@ end
 
 class Queen < SlidingPiece
 
-  # def moves
-  # end
+  # def initialize(pos)
+#     super(pos)
+#   end
 
-  def move_dirs
-    super.moves(:all)
+  def move
+    self.moves(:all)
   end
 
 end
+
+# p = Piece.new(board,[3, 2])
+# board = Array.new(8) {Array.new(8)}
+q = Queen.new(board, [5, 4])
+
+q.move
+
+
 
 class SteppingPiece < Piece
 
