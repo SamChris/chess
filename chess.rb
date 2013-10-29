@@ -1,7 +1,7 @@
-require './slidingpiece'
-require './steppingpiece'
+
 
 class Piece
+
 
   # @board = Array.new(8) {Array.new(8)}
 
@@ -11,12 +11,14 @@ class Piece
   KING_DELTAS = [ [-1, -1],[-1, 0],[-1, 1],[0, -1],[0, 1],[1, 1],[1, 0],[1, -1]]
 
   attr_accessor :pos, :board
+  attr_reader :color
 
 
-  def initialize(board, pos)
+  def initialize(board, pos, color)
     @board = board
     @pos = pos
-    @board[pos[0]][pos[1]]= self
+    @board.set_piece(pos, self)
+    @color = color
   end
 
 
@@ -36,7 +38,7 @@ class Piece
   end
 
   def put_board(moves)
-    @board.each_with_index do |el1, i|
+    @board.b_arr.each_with_index do |el1, i|
       el1.each_with_index do |el2, j|
         if moves.include?([i, j])
           print "  "
@@ -50,72 +52,18 @@ class Piece
 
 end
 
+require_relative 'board'
+require_relative 'slidingpiece'
+require_relative 'steppingpiece'
 
 
 
-class Bishop < SlidingPiece
 
-  def move
-    self.moves(:diagonal)
-  end
-
-end
-
-class Rook < SlidingPiece
-
-  #def moves
-#   end
-
-  def move
-    self.moves(:straight)
-  end
-
-end
-
-class Queen < SlidingPiece
-
-  # def initialize(pos)
-#     super(pos)
-#   end
-
-  def move
-    self.moves(:all)
-  end
-
-end
-
-class Knight < SteppingPiece
-
-  #def moves
-#   end
-
-  def move
-    self.moves(:knight)
-  end
-
-end
-
-class King < SteppingPiece
-
-  # def initialize(pos)
-#     super(pos)
-#   end
-
-  def move
-    self.moves(:king)
-  end
-
-end
 
 # p = Piece.new(board,[3, 2])
 # board = Array.new(8) {Array.new(8)}
 # q = Queen.new(board, [5, 4])
 # q = Queen.new(board, [5, 4])
-board = Array.new(8) {Array.new(8)}
-
-k = Knight.new(board, [5, 4])
-
-k.move
 
 
 

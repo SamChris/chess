@@ -4,13 +4,16 @@ class SlidingPiece < Piece
     if sym == :diagonal
       diag_moves = get_diag_moves
       put_board(diag_moves)
+      diag_moves
     elsif sym == :straight
       straight_moves = get_straight_moves
       put_board(straight_moves)
+      straight_moves
     else
       all_moves = get_diag_moves
       all_moves += get_straight_moves
       put_board(all_moves)
+      all_moves
     end
   end
 
@@ -41,10 +44,18 @@ class SlidingPiece < Piece
     new_pos = [pos[0] + x, pos[1] + y]
     return [] unless new_pos[0].between?(0,7) && new_pos[1].between?(0,7)
 
-    if @board[new_pos[0]][new_pos[1]].nil?
+    #if there is empty space then keep on sliding
+    if @board.b_arr[new_pos[0]][new_pos[1]].nil?
       move_arr << new_pos
       return move_arr + get_moves(new_pos, delta)
     end
+
+    #if there is an opposing piece then add its position and terminate
+    if ( @board.b_arr[new_pos[0]][new_pos[1]].color != self.color )
+       move_arr << new_pos
+       return move_arr
+    end
+
 
     return []
   end

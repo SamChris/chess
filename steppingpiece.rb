@@ -36,10 +36,12 @@ class SteppingPiece < Piece
     x, y = delta
     move_arr = []
     new_pos = [pos[0] + x, pos[1] + y]
-    return [] unless new_pos[0].between?(0,7) && new_pos[1].between?(0,7) &&
-                    @board[new_pos[0]][new_pos[1]].nil?
-    p new_pos
-    new_pos
+    return [] unless new_pos[0].between?(0,7) && new_pos[1].between?(0,7)
+
+    return new_pos if @board.b_arr[new_pos[0]][new_pos[1]].nil?
+
+    return new_pos if ( @board.b_arr[new_pos[0]][new_pos[1]].color != self.color )
+
   end
 
 
@@ -74,10 +76,12 @@ class King < SteppingPiece
 
 end
 
-board = Array.new(8) {Array.new(8)}
-
-k = Knight.new(board, [5, 4])
-
-k.move
+if $PROGRAM_NAME == __FILE__
+  # running as script
+  board = Board.new
+  q = Queen.new(board, [5, 4], :B)
+  k = King.new(board, [3, 5], :W)
+  board.checked?(:W)
+end
 
 
