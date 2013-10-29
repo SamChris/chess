@@ -31,19 +31,20 @@ class Piece
     #should use its own move method
   end
 
-  def move_into_check?(new_pos, piece)
+  def move_into_check?(piece, new_pos)
     test_board = @board.dup_the_board
     x, y = piece.pos
+    dup_piece = test_board.b_arr[x][y]
     test_board.b_arr[x][y] = nil
-    piece.pos = new_pos
-    x, y = piece.pos
-    test_board.b_arr[x][y] = piece
+    dup_piece.pos = new_pos
+    a, b = new_pos
+    test_board.b_arr[a][b] = dup_piece
 
     return test_board.checked?(piece.color)
   end
 
   def duplicate_piece(test_board)
-    self.class.new(test_board, self.pos, self.color)
+    return self.class.new(test_board, self.pos, self.color)
   end
 
 

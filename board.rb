@@ -81,8 +81,9 @@ class Board
   end
 
   def update_board(piece, new_pos)
-     unless piece.move_into_check?(new_pos, piece)
+     unless piece.move_into_check?(piece, new_pos)
         x, y = piece.pos
+        puts "#{x}  #{y} here at update_board"
         b_arr[x][y] = nil
         piece.pos = new_pos
         x, y = piece.pos
