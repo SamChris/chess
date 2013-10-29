@@ -60,7 +60,7 @@ class Board
   end
 
   def make_move
-    begin
+    # begin
       puts "Enter coords of piece to move. (Ex. '1 3')"
       start = gets.chomp.split(' ').map(&:to_i)
       x, y = start
@@ -74,19 +74,36 @@ class Board
         update_board(b_arr[x][y], move_to)
         # move(start, move_to)
       end
-    rescue NoMethodError
-      puts "There is no piece to move. Pick an actual piece."
-      retry
-    end
+    # rescue NoMethodError
+    #   puts "There is no piece to move. Pick an actual piece."
+    #   retry
+    # end
   end
 
   def update_board(piece, new_pos)
-    x, y = piece.pos
-    b_arr[x][y] = nil
+     unless piece.move_into_check?(new_pos, piece)
+        x, y = piece.pos
+        b_arr[x][y] = nil
+        piece.pos = new_pos
+        x, y = piece.pos
+        b_arr[x][y] = piece
+     else
+       puts "You are exposing yourself to being checked."
+     end
+  end
 
-    piece.pos = new_pos
-    x, y = piece.pos
-    b_arr[x][y] = piece
+
+  def dup_the_board
+    test_board = Board.new
+    self.b_arr.each_with_index do |el1, i|
+      el1.each_with_index do |el2, j|
+        next if self.b_arr[i][j].nil?
+        dupped_piece = self.b_arr[i][j].duplicate_piece(test_board)
+        test_board.b_arr[i][j] = dupped_piece
+      end
+    end
+
+    test_board
   end
 
 

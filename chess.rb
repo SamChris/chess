@@ -26,16 +26,26 @@ class Piece
     p places_to_move
   end
 
-
-
-
   def move
     #can't implement this because the piece
     #should use its own move method
   end
 
-  def move_into_check?(pos)
+  def move_into_check?(new_pos, piece)
+    test_board = @board.dup_the_board
+    x, y = piece.pos
+    test_board.b_arr[x][y] = nil
+    piece.pos = new_pos
+    x, y = piece.pos
+    test_board.b_arr[x][y] = piece
+
+    return test_board.checked?(piece.color)
   end
+
+  def duplicate_piece(test_board)
+    self.class.new(test_board, self.pos, self.color)
+  end
+
 
   def put_board(moves)
     @board.b_arr.each_with_index do |el1, i|
@@ -49,6 +59,7 @@ class Piece
       print "\n"
     end
   end
+
 
 end
 

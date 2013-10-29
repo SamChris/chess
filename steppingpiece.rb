@@ -40,7 +40,7 @@ class SteppingPiece < Piece
     return [] unless new_pos[0].between?(0,7) && new_pos[1].between?(0,7)
 
     return [new_pos] if @board.b_arr[new_pos[0]][new_pos[1]].nil?
-
+    return []if ( @board.b_arr[new_pos[0]][new_pos[1]].color == self.color )
     return [new_pos] if ( @board.b_arr[new_pos[0]][new_pos[1]].color != self.color )
 
   end
@@ -82,6 +82,7 @@ if $PROGRAM_NAME == __FILE__
   b = Board.new
   #q = Queen.new(board, [0, 0], :B)
   k = Knight.new(b, [3, 5], :W)
+  q = Queen.new(b, [1, 6], :W)
   board.checked?(:W)
 end
 

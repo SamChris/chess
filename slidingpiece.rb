@@ -57,6 +57,7 @@ class SlidingPiece < Piece
     end
 
 
+
     return []
   end
 
