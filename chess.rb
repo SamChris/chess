@@ -1,5 +1,8 @@
 class Piece
   DIAG_DELTAS = [ [1,1],[-1,-1],[1,-1],[-1, 1]]
+  STRAIGHT_DELTAS = [ [0,1],[0,-1],[1,0],[1,-1]]
+
+  attr_accessor :pos
 
 
   def initialize(board, pos)
@@ -28,19 +31,25 @@ class Piece
     diag_arr
   end
 
-  def get_moves(pos, x_delta, y_delta)
-
+  def get_moves(pos, delta)
+    x, y = delta
     move_arr = []
-    new_pos = [pos + x_delta, pos+y_delta]
-    return [] unless new_pos[0].between(0,7) && new_pos[1].between(0,7)
+    new_pos = [pos[0] + x, pos[1] + y]
+    return [] unless new_pos[0].between?(0,7) && new_pos[1].between?(0,7)
 
     if @board[new_pos[0]][new_pos[1]].nil?
-      move_arr += new_pos
-      return move_arr + get_moves(new_pos, x_delta, y_delta)
+      move_arr << new_pos
+      return move_arr + get_moves(new_pos, delta)
     end
 
     return []
   end
+
+end
+
+board = Array.new(8) {Array.new(8)}
+ p = Piece.new(board, [3, 4])
+
 
 class SlidingPiece < Piece
 
