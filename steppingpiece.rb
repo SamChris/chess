@@ -3,11 +3,11 @@ class SteppingPiece < Piece
   def moves(sym)
     if sym == :knight
       knight_moves = get_knight_moves
-      put_board(knight_moves)
+      # put_board(knight_moves)
       knight_moves
     elsif sym == :king
       king_moves = get_king_moves
-      put_board(king_moves)
+      # put_board(king_moves)
       king_moves
     end
   end

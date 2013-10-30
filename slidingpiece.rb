@@ -3,16 +3,16 @@ class SlidingPiece < Piece
   def moves(sym)
     if sym == :diagonal
       diag_moves = get_diag_moves
-      put_board(diag_moves)
+      # put_board(diag_moves)
       diag_moves
     elsif sym == :straight
       straight_moves = get_straight_moves
-      put_board(straight_moves)
+      # put_board(straight_moves)
       straight_moves
     else
       all_moves = get_diag_moves
       all_moves += get_straight_moves
-      put_board(all_moves)
+      # put_board(all_moves)
       all_moves
     end
   end

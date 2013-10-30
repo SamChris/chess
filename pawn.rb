@@ -12,7 +12,7 @@ class Pawn < Piece
 
   def moves(sym)
     pawn_moves = get_moves(self.pos)
-    put_board(pawn_moves)
+    # put_board(pawn_moves)
     pawn_moves
   end
 

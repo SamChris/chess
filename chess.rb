@@ -1,4 +1,4 @@
-
+require "debugger"
 
 class Piece
 
@@ -56,6 +56,7 @@ class Piece
         if moves.include?([i, j])
           print "  "
         else
+
           print "X "
         end
       end
@@ -64,12 +65,14 @@ class Piece
   end
 
 
+
 end
 
 require_relative 'board'
 require_relative 'slidingpiece'
 require_relative 'steppingpiece'
 require_relative 'pawn'
+require 'colorize'
 
 
 
