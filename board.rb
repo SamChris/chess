@@ -3,12 +3,14 @@
 
 class Board
 
-  attr_accessor :b_arr
+  attr_accessor :b_arr, :check_mated, :selected_piece
 
   def initialize
     @b_arr = Array.new(8) {Array.new(8)}
     set_up_board
     print_board
+    @check_mated = false
+    @selected_piece = nil
   end
 
   def set_piece(pos, piece)
@@ -114,47 +116,71 @@ class Board
     false
   end
 
+  def play_game
+    until check_mated
+       begin
+          possible_moves = select_a_piece
+          destination = select_destination(possible_moves)
+       rescue RuntimeError
+          begin
+            puts "That is not a valid move"
+            retry
+          end
+        if selected_piece.move_into_check?(selected_piece, destination)
+        rescue RuntimeError
 
-  def make_move
-    # begin
+          update_board(selected_piece, destination)
+        else
+          rescue
+            puts "You are moving into check"
+          end
+
+          if check_mate?(opposing_color(piece.color))
+              puts "Check Mate"
+            else
+              puts "You are exposing yourself to being checked."
+            end
+           print_board
+
+
+  end
+
+  def select_a_piece
+    begin
       puts "Enter coords of piece to move. (Ex. '1 3')"
-      # debugger
       start = gets.chomp.split(' ').map(&:to_i)
       x, y = start
       possible_moves = []
-      piece = b_arr[x][y]
-      puts piece.class
-      possible_moves = piece.move
-      puts "Please select one of these positions"
-      p possible_moves
-      move_to = gets.chomp.split(' ').map(&:to_i)
-      if possible_moves.include?(move_to)
-        update_board(b_arr[x][y], move_to)
-        # move(start, move_to)
-      end
-    # rescue NoMethodError
-    #   puts "There is no piece to move. Pick an actual piece."
-    #   retry
-    # end
+      self.selected_piece = b_arr[x][y]
+      puts selected_piece.class
+      possible_moves = selected_piece.move
+    rescue NoMethodError
+      puts "Pick an actual piece"
+      retry
+    end
+    possible_moves
   end
 
-  def update_board(piece, new_pos)
-     unless piece.move_into_check?(piece, new_pos)
-        x, y = piece.pos
-        self.b_arr[x][y] = nil
-        piece.pos = new_pos
-        x, y = piece.pos
-        self.b_arr[x][y] = piece
-        if check_mate?(opposing_color(piece.color))
-          puts "Check Mate"
-          exit
-        end
-     else
-        puts "You are exposing yourself to being checked."
-     end
-     print_board
+  def select_destination(possible_moves)
+    begin
+      puts "Please select one of these positions"
+      p possible_moves
+      destination = gets.chomp.split(' ').map(&:to_i)
+      if possible_moves.include?(destination)
+        return destination
+      else
+         raise RuntimeError
+      end
+    end
+  end
 
-     nil
+  def update_board(selected_piece, destination)
+    x, y = selected_piece.pos
+    self.b_arr[x][y] = nil
+    selected_piece.pos = destination
+    x, y = selected_piece.pos
+    self.b_arr[x][y] = selected_piece
+    nil
   end
 
 
@@ -197,7 +223,7 @@ class Board
   end
 
   def print_board
-    print "    0  1  2  3  4  5  6  7 ".bg_green.red
+    print "   ┇ 0 ┇ 1 ┇ 2 ┇ 3 ┇ 4 ┇ 5 ┇ 6 ┇ 7 ┇".bg_green.red
     print "\n"
     self.b_arr.each_with_index do |el1, i|
       print " #{i} ".bg_green.red
@@ -215,9 +241,9 @@ class Board
           to_print = get_shape(self.b_arr[i][j], self.b_arr[i][j].color)
 
           if (i+j)%2==0
-            print to_print.bg_gray
+            print to_print.bg_gray.cyan
           else
-            print to_print.bg_red
+            print to_print.bg_red.magenta
           end
         end
 
@@ -256,24 +282,24 @@ class Board
 end
 
 class String
-# def black;          "\033[30m#{self}\033[0m" end
- def red;            "\033[31m#{self}\033[0m" end
-# def green;          "\033[32m#{self}\033[0m" end
-# def  brown;         "\033[33m#{self}\033[0m" end
-# def blue;           "\033[34m#{self}\033[0m" end
-# def magenta;        "\033[35m#{self}\033[0m" end
-# def cyan;           "\033[36m#{self}\033[0m" end
- def gray;           "\033[37m#{self}\033[0m" end
-# def bg_black;       "\033[40m#{self}\0330m"  end
- def bg_red;         "\033[41m#{self}\033[0m" end
- def bg_green;       "\033[42m#{self}\033[0m" end
-# def bg_brown;       "\033[43m#{self}\033[0m" end
-# def bg_blue;        "\033[44m#{self}\033[0m" end
-# def bg_magenta;     "\033[45m#{self}\033[0m" end
- def bg_cyan;        "\033[46m#{self}\033[0m" end
- def bg_gray;        "\033[47m#{self}\033[0m" end
-# def bold;           "\033[1m#{self}\033[22m" end
-# def reverse_color;  "\033[7m#{self}\033[27m" end
+  def black;          "\033[30m#{self}\033[0m" end
+  def red;            "\033[31m#{self}\033[0m" end
+  def green;          "\033[32m#{self}\033[0m" end
+  def  brown;         "\033[33m#{self}\033[0m" end
+  def blue;           "\033[34m#{self}\033[0m" end
+  def magenta;        "\033[35m#{self}\033[0m" end
+  def cyan;           "\033[36m#{self}\033[0m" end
+  def gray;           "\033[37m#{self}\033[0m" end
+  def bg_black;       "\033[40m#{self}\0330m"  end
+  def bg_red;         "\033[41m#{self}\033[0m" end
+  def bg_green;       "\033[42m#{self}\033[0m" end
+  def bg_brown;       "\033[43m#{self}\033[0m" end
+  def bg_blue;        "\033[44m#{self}\033[0m" end
+  def bg_magenta;     "\033[45m#{self}\033[0m" end
+  def bg_cyan;        "\033[46m#{self}\033[0m" end
+  def bg_gray;        "\033[47m#{self}\033[0m" end
+  def bold;           "\033[1m#{self}\033[22m" end
+  def reverse_color;  "\033[7m#{self}\033[27m" end
 end
 
 
