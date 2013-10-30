@@ -17,7 +17,7 @@ class Board
   def checked?(color)
     king_pos = find_king_pos(color)
     op_color = opposing_color(color)
-    op_pieces_pos = find_opposing_pieces(op_color)
+    op_pieces_pos = find_opposing_pieces_locations(op_color)
 
     op_pieces_pos.each do |pos|
       i, j = pos
@@ -28,18 +28,51 @@ class Board
     false
   end
 
+  def check_mate?(color)
+    #find all opposing pieces
+    #find all their possible moves
+    #if a single possible move does not lead to checked?, player is not in
+    #checkmate, else player is checkmated.
+
+    op_pieces = find_opposing_pieces(color)
+    p op_pieces
+    op_pieces.each do |op_piece|
+      op_piece_moves = op_piece.move
+      p op_piece_moves
+      op_piece_moves.each do |move_pos|
+        return false unless op_piece.move_into_check?(op_piece, move_pos)
+      end
+    end
+    true
+
+  end
+
   def find_opposing_pieces(op_color)
     opp_pieces = []
     b_arr.each_with_index do |el1, i|
       el1.each_with_index do |el2, j|
         next if b_arr[i][j].nil?
         if b_arr[i][j].color == op_color
-          opp_pieces << [i,j]
+          opp_pieces << b_arr[i][j]
         end
       end
     end
 
     opp_pieces
+  end
+
+  def find_opposing_pieces_locations(op_color)
+    opp_pieces_locations = []
+    b_arr.each_with_index do |el1, i|
+      el1.each_with_index do |el2, j|
+        next if b_arr[i][j].nil?
+        if b_arr[i][j].color == op_color
+          opp_pieces_locations << [i,j]
+        end
+      end
+    end
+
+    opp_pieces_locations
   end
 
   def opposing_color(color)
@@ -60,14 +93,18 @@ class Board
   end
 
 
-  def has_enemy(pos, color)
+  def has_enemy?(pos, color)
     x, y = pos
     return false if self.b_arr[x][y].nil?
     return false if self.b_arr[x][y].color == color
     return true
   end
 
-
+  def is_empty?(pos)
+    x, y = pos
+    return true if self.b_arr[x][y].nil?
+    false
+  end
 
 
   def make_move
@@ -99,6 +136,10 @@ class Board
         piece.pos = new_pos
         x, y = piece.pos
         b_arr[x][y] = piece
+        if check_mate?(opposing_color(piece.color))
+          puts "Check Mate"
+          exit
+        end
      else
        puts "You are exposing yourself to being checked."
      end

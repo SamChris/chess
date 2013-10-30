@@ -80,10 +80,10 @@ end
 if $PROGRAM_NAME == __FILE__
   load 'chess.rb'
   b = Board.new
-  k = King.new(b, [5, 3], :B)
-  kn = Knight.new(b, [4, 2], :B)
-  q = Queen.new(b, [2, 1], :W)
-
+  k = King.new(b, [0, 0], :B)
+  kn = Rook.new(b, [1, 7], :W)
+  q = Queen.new(b, [7, 1], :W)
+  #p = Pawn.new(b, [5, 6], :W)
   # board.checked?(:W)
 end
 

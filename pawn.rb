@@ -6,6 +6,9 @@ class Pawn < Piece
     @first_move = true
   end
 
+  def move
+    self.moves(:pawn)
+  end
 
   def moves(sym)
     pawn_moves = get_moves(self.pos)
@@ -15,7 +18,7 @@ class Pawn < Piece
 
 
   def get_moves(pos)
-    if self.color == :W ? p_delta = -1 : p_delta = 1
+    self.color == :W ? p_delta = -1 : p_delta = 1
     x, y = pos
     move_arr = []
 
@@ -36,8 +39,8 @@ class Pawn < Piece
     if new_pos[0].between?(0,7) && new_pos[1].between?(0,7)
       if self.board.is_empty?(new_pos)
          move_arr <<  new_pos
-         if first_time
-            first_time = false
+         if self.first_move
+            self.first_move = false
             new_pos = [x+p_delta+p_delta, y]
             move_arr <<  new_pos if self.board.is_empty?(new_pos)
          end
