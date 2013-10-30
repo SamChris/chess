@@ -1,4 +1,4 @@
-
+# encoding: UTF-8
 
 
 class Board
@@ -16,6 +16,7 @@ class Board
     b_arr[x][y] = piece
     # piece.pos = [x, y]
   end
+
 
   def checked?(color)
     king_pos = find_king_pos(color)
@@ -77,6 +78,10 @@ class Board
 
     opp_pieces_locations
   end
+  #
+  # def background_switch(background)
+  #   background == "\033[41m#{self}\033[0m" ? : "\033[47m#{self}\033[0m"
+  # end
 
   def opposing_color(color)
     color == :W ? :B : :W
@@ -134,7 +139,7 @@ class Board
   end
 
   def update_board(piece, new_pos)
-     # unless piece.move_into_check?(piece, new_pos)
+     unless piece.move_into_check?(piece, new_pos)
         x, y = piece.pos
         self.b_arr[x][y] = nil
         piece.pos = new_pos
@@ -144,10 +149,11 @@ class Board
           puts "Check Mate"
           exit
         end
-     # else
-#        puts "You are exposing yourself to being checked."
-#      end
+     else
+        puts "You are exposing yourself to being checked."
+     end
      print_board
+
      nil
   end
 
@@ -191,17 +197,35 @@ class Board
   end
 
   def print_board
+    print "    0  1  2  3  4  5  6  7 ".bg_green.red
+    print "\n"
     self.b_arr.each_with_index do |el1, i|
+      print " #{i} ".bg_green.red
       el1.each_with_index do |el2, j|
+
         if self.b_arr[i][j].nil?
-          print "  "
+
+          if (i+j)%2==0
+            print "   ".bg_gray
+          else
+            print "   ".bg_red
+          end
+
         else
-          to_print = get_shape(self.b_arr[i][j])
-          print to_print
+          to_print = get_shape(self.b_arr[i][j], self.b_arr[i][j].color)
+
+          if (i+j)%2==0
+            print to_print.bg_gray
+          else
+            print to_print.bg_red
+          end
         end
+
       end
-       print "\n"
+
+      print "\n"
     end
+     print " ♥  0  1  2  3  4  5  6  7 ".bg_green.red
     print "\n\n"
     print "---------------------------------------------------------------"
     print "\n\n"
@@ -209,14 +233,50 @@ class Board
   end
 
 
-  def get_shape(piece)
-    return 'P ' if piece.class == Pawn
-    return 'Q ' if piece.class == Queen
-    return 'K ' if piece.class == King
-    return 'B ' if piece.class == Bishop
-    return 'R ' if piece.class == Rook
-    return 'N ' if piece.class == Knight
+  def get_shape(piece, color)
+    if color == :W
+      return ' ♙ ' if piece.class == Pawn
+      return ' ♕ ' if piece.class == Queen
+      return ' ♔ ' if piece.class == King
+      return ' ♗ ' if piece.class == Bishop
+      return ' ♖ ' if piece.class == Rook
+      return ' ♘ ' if piece.class == Knight
+    else
+      return ' ♟ ' if piece.class == Pawn
+      return ' ♛ ' if piece.class == Queen
+      return ' ♚ ' if piece.class == King
+      return ' ♝ ' if piece.class == Bishop
+      return ' ♜ ' if piece.class == Rook
+      return ' ♞ ' if piece.class == Knight
+    end
+
   end
 
 
 end
+
+class String
+# def black;          "\033[30m#{self}\033[0m" end
+ def red;            "\033[31m#{self}\033[0m" end
+# def green;          "\033[32m#{self}\033[0m" end
+# def  brown;         "\033[33m#{self}\033[0m" end
+# def blue;           "\033[34m#{self}\033[0m" end
+# def magenta;        "\033[35m#{self}\033[0m" end
+# def cyan;           "\033[36m#{self}\033[0m" end
+ def gray;           "\033[37m#{self}\033[0m" end
+# def bg_black;       "\033[40m#{self}\0330m"  end
+ def bg_red;         "\033[41m#{self}\033[0m" end
+ def bg_green;       "\033[42m#{self}\033[0m" end
+# def bg_brown;       "\033[43m#{self}\033[0m" end
+# def bg_blue;        "\033[44m#{self}\033[0m" end
+# def bg_magenta;     "\033[45m#{self}\033[0m" end
+ def bg_cyan;        "\033[46m#{self}\033[0m" end
+ def bg_gray;        "\033[47m#{self}\033[0m" end
+# def bold;           "\033[1m#{self}\033[22m" end
+# def reverse_color;  "\033[7m#{self}\033[27m" end
+end
+
+
+
+
+

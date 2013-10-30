@@ -1,4 +1,4 @@
-require "debugger"
+# encoding: UTF-8
 
 class Piece
 
