@@ -9,6 +9,8 @@ class Piece
   STRAIGHT_DELTAS = [ [0, 1],[0,-1],[1, 0],[-1,0]]
   KNIGHT_DELTAS = [ [-2, -1],[-2, 1],[-1, -2],[-1, 2],[1, 2],[2, 1],[2, -1],[1, -2] ]
   KING_DELTAS = [ [-1, -1],[-1, 0],[-1, 1],[0, -1],[0, 1],[1, 1],[1, 0],[1, -1]]
+  PAWN_W_DELTAS = [ [-1, -1], [-1, 0], [-1, 1] ]
+  PAWN_B_DELTAS = [ [1, -1], [1, 0], [1, 1] ]
 
   attr_accessor :pos, :board
   attr_reader :color
@@ -22,8 +24,8 @@ class Piece
   end
 
 
-  def moves(places_to_move)
-    p places_to_move
+  def moves(sym)
+    p sym
   end
 
   def move
@@ -67,6 +69,7 @@ end
 require_relative 'board'
 require_relative 'slidingpiece'
 require_relative 'steppingpiece'
+require_relative 'pawn'
 
 
 

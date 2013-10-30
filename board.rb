@@ -59,6 +59,17 @@ class Board
     return []
   end
 
+
+  def has_enemy(pos, color)
+    x, y = pos
+    return false if self.b_arr[x][y].nil?
+    return false if self.b_arr[x][y].color == color
+    return true
+  end
+
+
+
+
   def make_move
     # begin
       puts "Enter coords of piece to move. (Ex. '1 3')"
