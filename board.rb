@@ -116,34 +116,34 @@ class Board
     false
   end
 
-  def play_game
-    until check_mated
-       begin
-          possible_moves = select_a_piece
-          destination = select_destination(possible_moves)
-       rescue RuntimeError
-          begin
-            puts "That is not a valid move"
-            retry
-          end
-        if selected_piece.move_into_check?(selected_piece, destination)
-        rescue RuntimeError
-
-          update_board(selected_piece, destination)
-        else
-          rescue
-            puts "You are moving into check"
-          end
-
-          if check_mate?(opposing_color(piece.color))
-              puts "Check Mate"
-            else
-              puts "You are exposing yourself to being checked."
-            end
-           print_board
-
-
-  end
+  # def play_game
+  #   until check_mated
+  #      begin
+  #         possible_moves = select_a_piece
+  #         destination = select_destination(possible_moves)
+  #      rescue RuntimeError
+  #         begin
+  #           puts "That is not a valid move"
+  #           retry
+  #         end
+  #       if selected_piece.move_into_check?(selected_piece, destination)
+  #       rescue RuntimeError
+  # 
+  #         update_board(selected_piece, destination)
+  #       else
+  #         rescue
+  #           puts "You are moving into check"
+  #         end
+  # 
+  #         if check_mate?(opposing_color(piece.color))
+  #             puts "Check Mate"
+  #           else
+  #             puts "You are exposing yourself to being checked."
+  #           end
+  #          print_board
+  # 
+  # 
+  # end
 
   def select_a_piece
     begin
@@ -223,7 +223,7 @@ class Board
   end
 
   def print_board
-    print "   ┇ 0 ┇ 1 ┇ 2 ┇ 3 ┇ 4 ┇ 5 ┇ 6 ┇ 7 ┇".bg_green.red
+    print "    0  1  2  3  4  5  6  7    ".bg_green.red
     print "\n"
     self.b_arr.each_with_index do |el1, i|
       print " #{i} ".bg_green.red
@@ -248,10 +248,10 @@ class Board
         end
 
       end
-
+      print " #{i} ".bg_green.red
       print "\n"
     end
-     print " ♥  0  1  2  3  4  5  6  7 ".bg_green.red
+     print " ♥  0  1  2  3  4  5  6  7    ".bg_green.red
     print "\n\n"
     print "---------------------------------------------------------------"
     print "\n\n"
